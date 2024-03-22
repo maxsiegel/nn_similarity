@@ -140,7 +140,9 @@ def load_computed_similarity():
 
 if __name__ == "__main__":
 
+    # this line fixes an error that makes running using ipython difficult
     __spec__ = None
+
     sim_dict = recompute()
     sims = load_computed_similarity()
 
