@@ -59,6 +59,9 @@ def prepare_wav(path):
 
 #     return similarity
 
+# these are top level so that I can use multiprocessing - it refuses to pickle
+# functions. to avoid reloading the model weights every function call, load the
+# model at top level
 model = yamnet.yamnet_frames_model(p)
 model.load_weights("yamnet.h5")
 
@@ -112,8 +115,8 @@ def recompute():
 
 def plot():
     sims = load_computed_similarity()
-
     sims_list = [(k1, k2, val) for ((k1, k2), val) in sims.items()]
+
     scores = pd.DataFrame(sims_list, columns=['Sound 1', 'Sound 2', 'score'])
     # truncate
     scores['Sound 1'] = scores['Sound 1'].str.slice(stop = -4)
