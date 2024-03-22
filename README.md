@@ -1,3 +1,7 @@
+# SIMILARITY METRIC BUILT ON YAMNET
+
+New code is in similarity.py - original README follows.
+
 # YAMNet
 
 YAMNet is a pretrained deep net that predicts 521 audio event classes based on
