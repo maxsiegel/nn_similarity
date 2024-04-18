@@ -2,7 +2,7 @@ import os
 from os.path import join
 import pickle
 import pprint
-from itertools import combinations
+from itertools import combinations, permutations
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -97,11 +97,12 @@ def recompute():
 
     # remove "2" versions
     files = [f for f in files if '2' not in f]
-
     from multiprocessing import Pool
     p = Pool(9)
 
-    todo = list(combinations(files, 2))
+    # todo = list(combinations(files, 2))
+    todo = list(permutations(files, 2))
+
     sims = p.starmap(compute_similarity, todo)
 
     sim_dict = {(k1, k2): k3 for k1, k2, k3 in sims}
@@ -113,18 +114,19 @@ def recompute():
 
 
 
-def plot():
-    sims = load_computed_similarity()
+def plot(sims):
     sims_list = [(k1, k2, val) for ((k1, k2), val) in sims.items()]
 
-    scores = pd.DataFrame(sims_list, columns=['Sound 1', 'Sound 2', 'score'])
+    scores = pd.DataFrame(sims_list, columns=('Sound 1', 'Sound 2', 'score'))
+
     # truncate
     scores['Sound 1'] = scores['Sound 1'].str.slice(stop = -4)
     scores['Sound 2'] = scores['Sound 2'].str.slice(stop = -4)
-    scores = scores.pivot(index = "Sound 1", columns = "Sound 2")
+    scores_table = scores.pivot(index = "Sound 1", columns = "Sound 2")
+
     # f = plt.figure(figsize=(15, 15))
     sns.set_theme(font_scale = .75)
-    f = sns.heatmap(scores, yticklabels=True, xticklabels=True)
+    f = sns.heatmap(scores_table, yticklabels=True, xticklabels=True)
 
     f.figure.tight_layout()
     # f.ax.subplot()
@@ -146,8 +148,8 @@ if __name__ == "__main__":
     # this line fixes an error that makes running using ipython difficult
     __spec__ = None
 
-    sim_dict = recompute()
+    # sims = recompute()
     sims = load_computed_similarity()
+    plot(sims)
 
-    plot()
     import pdb; pdb.set_trace()
