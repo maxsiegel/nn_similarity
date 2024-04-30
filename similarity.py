@@ -152,4 +152,4 @@ if __name__ == "__main__":
     sims = load_computed_similarity()
     plot(sims)
 
-    import pdb; pdb.set_trace()
+    # import pdb; pdb.set_trace()
